@@ -4,7 +4,7 @@ const bodyParser = require('body-parser')
 const app = express();
 
 app.set('view engine', 'ejs'); // ejs template
-
+app.use(bodyParser.urlencoded({extended:true}));
 app.get("/", (req, res) => {
   var today = new Date();
   var options = {
