@@ -3,8 +3,13 @@ const bodyParser = require('body-parser')
 
 const app = express();
 
+
+
 app.set('view engine', 'ejs'); // ejs template
 app.use(bodyParser.urlencoded({extended:true}));
+
+var item ="";
+
 //Changing Date
 app.get("/", (req, res) => {
   var today = new Date();
@@ -15,13 +20,16 @@ app.get("/", (req, res) => {
   };
   var day = today.toLocaleDateString("en-US",options);
   res.render("list", {
-    kindOfDay: day
+    kindOfDay: day,
+    newlistItem: item
   });
 });
 
 
 app.post("/",(req,res)=>{
-  console.log(req.body.newItem);
+  var item = req.body.newItem;
+  console.log(item);
+  res.redirect("/");
 });
 
 
