@@ -12,13 +12,20 @@
     <li>Buy food</li>
     <li>Cook food</li>
     <li>Eat food</li>
-    <li><%= newlistItem %></li>
-  </ul>
-<form class="" action="/" method="post">
-  <input type="text" name="newItem">
-  <button type="submit" name="button">Add</button>
 
-</form>
+
+    <% for (let i=0; i < newlistItems.length; i++) { %>
+    <li><%= newlistItems[i] %></li>
+    <% } %>
+
+    </form>
+
+  </ul>
+  <form class="" action="/" method="post">
+    <input type="text" name="newItem">
+    <button type="submit" name="button">Add</button>
+
+  </form>
 
 </body>
 
