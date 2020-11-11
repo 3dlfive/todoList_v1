@@ -3,7 +3,7 @@ const bodyParser = require('body-parser')
 
 const app = express();
 
-var items = [];
+var items = ["Buy food","Cook food","Eat food"];
 
 app.set('view engine', 'ejs'); // ejs template
 app.use(bodyParser.urlencoded({extended:true}));
