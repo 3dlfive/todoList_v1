@@ -5,6 +5,7 @@ const app = express();
 
 app.set('view engine', 'ejs'); // ejs template
 app.use(bodyParser.urlencoded({extended:true}));
+//Changing Date
 app.get("/", (req, res) => {
   var today = new Date();
   var options = {
@@ -21,7 +22,7 @@ app.get("/", (req, res) => {
 
 app.post("/",(req,res)=>{
   console.log(req.body.newItem);
-})
+});
 
 
 app.listen(3000, () => {
