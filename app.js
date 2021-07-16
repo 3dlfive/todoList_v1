@@ -53,7 +53,6 @@ app.get("/", (req, res) => {
 app.post("/", (req, res) => {
 
 const itemName = req.body.newItem;
-
 const item = new Item({
   name:itemName
 });
@@ -61,6 +60,17 @@ const item = new Item({
 item.save();
 res.redirect("/");
 
+});
+
+app.post("/delete",(req,res)=>{
+const checkedItemId = req.body.chekbox;
+
+Item.findByIdAndRemove(checkedItemId, (err)=>{
+  if (!err){
+    console.log("No errors.item ID"+checkedItemId+" deleted  Seuccsesfully!");
+      res.redirect("/");
+  }
+});
 });
 
 //confige work page template
