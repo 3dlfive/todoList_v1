@@ -7,10 +7,25 @@ const app = express();
 const itemsSchema = {
   name: String
 };
-const Item = mongoose.model(
-  "Item", itemsSchema
-);
+const Item = mongoose.model("Item", itemsSchema);
+const item1 = new Item({
+  name:"Welcome to your to do list"
+});
+const item2 = new Item({
+  name:"Hit the + button to add a new item."
+});
+const item3 = new Item({
+  name: " <---- Hit this to delete an item."
+});
+const defaultItems = [item1, item2, item3];
+Item.insertMany(defaultItems, function(err){
+  if (err) {
+    console.log("Something dont work.");
+  } else {
+    console.log("Seuccsesfully saved default itemss to DB");
+  }
 
+});
 
 app.set('view engine', 'ejs'); // ejs template
 app.use(bodyParser.urlencoded({
@@ -26,10 +41,7 @@ mongoose.connect("mongodb://localhost:27017/todolistDB", {useNewUrlParser: true}
 //Changing Date
 app.get("/", (req, res) => {
 
-  res.render("list", {
-    listTitle: "Today",
-    newlistItems: items
-  });
+  res.render("list", {listTitle: "Today",newlistItems: defaultItems});
 });
 
 app.post("/", (req, res) => {
