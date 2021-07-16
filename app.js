@@ -18,14 +18,8 @@ const item3 = new Item({
   name: " <---- Hit this to delete an item."
 });
 const defaultItems = [item1, item2, item3];
-Item.insertMany(defaultItems, function(err){
-  if (err) {
-    console.log("Something dont work.");
-  } else {
-    console.log("Seuccsesfully saved default itemss to DB");
-  }
+//
 
-});
 
 app.set('view engine', 'ejs'); // ejs template
 app.use(bodyParser.urlencoded({
@@ -40,8 +34,20 @@ mongoose.connect("mongodb://localhost:27017/todolistDB", {useNewUrlParser: true}
 
 //Changing Date
 app.get("/", (req, res) => {
-  Item.find({},(err,foundItems)=>{res.render("list", {listTitle: "Today",newlistItems: foundItems});})
+  Item.find({},(err,foundItems)=>{
+    if (foundItems.length === 0){
+      Item.insertMany(defaultItems, function(err){
+        if (err) {
+          console.log("Something dont work.");
+        } else {
+          console.log("Seuccsesfully saved default itemss to DB");
+        }
 
+      });
+    } else {
+      res.render("list", {listTitle: "Today",newlistItems: foundItems});
+    }
+    })
 });
 
 app.post("/", (req, res) => {
