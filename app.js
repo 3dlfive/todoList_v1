@@ -42,8 +42,8 @@ app.get("/", (req, res) => {
         } else {
           console.log("Seuccsesfully saved default itemss to DB");
         }
-
       });
+      res.redirect("/");
     } else {
       res.render("list", {listTitle: "Today",newlistItems: foundItems});
     }
