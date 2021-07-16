@@ -40,8 +40,8 @@ mongoose.connect("mongodb://localhost:27017/todolistDB", {useNewUrlParser: true}
 
 //Changing Date
 app.get("/", (req, res) => {
+  Item.find({},(err,foundItems)=>{res.render("list", {listTitle: "Today",newlistItems: foundItems});})
 
-  res.render("list", {listTitle: "Today",newlistItems: defaultItems});
 });
 
 app.post("/", (req, res) => {
