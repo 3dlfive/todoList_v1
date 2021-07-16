@@ -1,11 +1,16 @@
 const express = require("express");
 const bodyParser = require('body-parser')
-const date = require(__dirname + "/date.js");
 
+const mongoose = require('mongoose');
 const app = express();
 
-const items = ["Buy food", "Cook food", "Eat food"];
-const workItems = ["Read book"];
+const itemsSchema = {
+  name: String
+};
+const Item = mongoose.model(
+  "Item", itemsSchema
+);
+
 
 app.set('view engine', 'ejs'); // ejs template
 app.use(bodyParser.urlencoded({
@@ -14,11 +19,15 @@ app.use(bodyParser.urlencoded({
 app.use(express.static("public"));
 
 
+mongoose.connect("mongodb://localhost:27017/todolistDB", {useNewUrlParser: true});
+
+
+
 //Changing Date
 app.get("/", (req, res) => {
-let day = date.getDate();
+
   res.render("list", {
-    listTitle: day,
+    listTitle: "Today",
     newlistItems: items
   });
 });
