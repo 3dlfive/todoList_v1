@@ -9,10 +9,10 @@ const itemsSchema = {
 };
 const Item = mongoose.model("Item", itemsSchema);
 const item1 = new Item({
-  name:"Welcome to your to do list"
+  name: "Welcome to your to do list"
 });
 const item2 = new Item({
-  name:"Hit the + button to add a new item."
+  name: "Hit the + button to add a new item."
 });
 const item3 = new Item({
   name: " <---- Hit this to delete an item."
@@ -37,15 +37,17 @@ app.use(bodyParser.urlencoded({
 app.use(express.static("public"));
 
 
-mongoose.connect("mongodb://localhost:27017/todolistDB", {useNewUrlParser: true});
+mongoose.connect("mongodb://localhost:27017/todolistDB", {
+  useNewUrlParser: true
+});
 
 
 
 //Changing Date
 app.get("/", (req, res) => {
-  Item.find({},(err,foundItems)=>{
-    if (foundItems.length === 0){
-      Item.insertMany(defaultItems, function(err){
+  Item.find({}, (err, foundItems) => {
+    if (foundItems.length === 0) {
+      Item.insertMany(defaultItems, function(err) {
         if (err) {
           console.log("Something dont work.");
         } else {
@@ -54,30 +56,38 @@ app.get("/", (req, res) => {
       });
       res.redirect("/");
     } else {
-      res.render("list", {listTitle: "Today",newlistItems: foundItems});
+      res.render("list", {
+        listTitle: "Today",
+        newlistItems: foundItems
+      });
     }
-    })
+  })
 });
 // Добавление динамический листов
-app.get("/:customListName", (req,res)=>{
-    const customListName = req.params.customListName;
+app.get("/:customListName", (req, res) => {
+  const customListName = req.params.customListName;
 
-    List.findOne({name: customListName},(err,foundList)=>{
-      if (!err){
-        if (!foundList) {
-          const list = new List({
-            // Создание нового списка
-            name:customListName,
-            items: defaultItems
-          });
-          list.save();
-          res.redirect("/" + customListName);
-        } else {
-          console.log("Exists!");
-          res.render("list",{listTitle: foundList.name ,newlistItems: foundList.items});
-        }
+  List.findOne({
+    name: customListName
+  }, (err, foundList) => {
+    if (!err) {
+      if (!foundList) {
+        const list = new List({
+          // Создание нового списка
+          name: customListName,
+          items: defaultItems
+        });
+        list.save();
+        res.redirect("/" + customListName);
+      } else {
+        console.log("Exists!");
+        res.render("list", {
+          listTitle: foundList.name,
+          newlistItems: foundList.items
+        });
       }
-    });
+    }
+  });
 
 
 });
@@ -86,25 +96,48 @@ app.get("/:customListName", (req,res)=>{
 
 app.post("/", (req, res) => {
 
-const itemName = req.body.newItem;
-const item = new Item({
-  name:itemName
-});
+  const itemName = req.body.newItem;
+  const listName = req.body.list;
 
-item.save();
-res.redirect("/");
+  const item = new Item({
+    name: itemName
+  });
 
-});
-
-app.post("/delete",(req,res)=>{
-const checkedItemId = req.body.chekbox;
-
-Item.findByIdAndRemove(checkedItemId, (err)=>{
-  if (!err){
-    console.log("No errors.item ID"+checkedItemId+" deleted  Seuccsesfully!");
-      res.redirect("/");
+  if (listName === "Today") {
+    item.save();
+    res.redirect("/");
+  } else {
+    List.findOne({
+      name: listName
+    }, (err, foundList) => {
+      foundList.items.push(item);
+      foundList.save();
+      res.redirect("/" + listName);
+    })
   }
+
 });
+
+app.post("/delete", (req, res) => {
+  const checkedItemId = req.body.chekbox;
+  const listName = req.body.listName;
+
+  if (listName === "Today"){
+    Item.findByIdAndRemove(checkedItemId, (err) => {
+      if (!err) {
+        console.log("No errors.item ID" + checkedItemId + " deleted  Seuccsesfully!");
+        res.redirect("/");
+      }
+    });
+  } else {
+    List.findOneAndUpdate({name: listName},{$pull: {items:{_id: checkedItemId}}},(err, foundList)=>{
+      if (!err) {
+        res.redirect("/" + listName);
+      }
+    })
+  }
+
+
 });
 
 //confige work page template
@@ -120,7 +153,7 @@ app.post("/work", (req, res) => {
   res.redirect("/work");
 });
 
-app.get("/about", (req, res) =>{
+app.get("/about", (req, res) => {
   res.render("about");
 });
 
