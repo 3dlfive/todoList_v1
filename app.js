@@ -17,9 +17,15 @@ const item2 = new Item({
 const item3 = new Item({
   name: " <---- Hit this to delete an item."
 });
+
 const defaultItems = [item1, item2, item3];
 //
+const listSchema = {
+  name: String,
+  items: [itemsSchema]
+};
 
+const List = mongoose.model("List", listSchema);
 
 
 
@@ -55,6 +61,25 @@ app.get("/", (req, res) => {
 // Добавление динамический листов
 app.get("/:customListName", (req,res)=>{
     const customListName = req.params.customListName;
+
+    List.findOne({name: customListName},(err,foundList)=>{
+      if (!err){
+        if (!foundList) {
+          const list = new List({
+            // Создание нового списка
+            name:customListName,
+            items: defaultItems
+          });
+          list.save();
+          res.redirect("/" + customListName);
+        } else {
+          console.log("Exists!");
+          res.render("list",{listTitle: foundList.name ,newlistItems: foundList.items});
+        }
+      }
+    });
+
+
 });
 
 
