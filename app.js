@@ -38,7 +38,7 @@ app.use(bodyParser.urlencoded({
 app.use(express.static("public"));
 
 
-mongoose.connect("mongodb+srv://admin-denystry:SMjJkKADg4uUw2CY@cluster0.hoh1u.mongodb.net/todolistDB", {
+mongoose.connect("mongodb+srv://admin-denystry:pswd@cluster0.hoh1u.mongodb.net/todolistDB", {
   useNewUrlParser: true
 });
 
