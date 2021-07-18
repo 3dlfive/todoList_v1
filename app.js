@@ -1,5 +1,6 @@
 const express = require("express");
-const bodyParser = require('body-parser')
+const bodyParser = require('body-parser');
+const _ = require("lodash");
 
 const mongoose = require('mongoose');
 const app = express();
@@ -65,7 +66,7 @@ app.get("/", (req, res) => {
 });
 // Добавление динамический листов
 app.get("/:customListName", (req, res) => {
-  const customListName = req.params.customListName;
+  const customListName = _.capitalize(req.params.customListName);
 
   List.findOne({
     name: customListName
