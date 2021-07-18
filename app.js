@@ -21,6 +21,9 @@ const defaultItems = [item1, item2, item3];
 //
 
 
+
+
+
 app.set('view engine', 'ejs'); // ejs template
 app.use(bodyParser.urlencoded({
   extended: true
@@ -49,6 +52,12 @@ app.get("/", (req, res) => {
     }
     })
 });
+// Добавление динамический листов
+app.get("/:customListName", (req,res)=>{
+    const customListName = req.params.customListName;
+});
+
+
 
 app.post("/", (req, res) => {
 
